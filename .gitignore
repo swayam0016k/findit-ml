@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite*
+.env
+.env.*
+!.env.example
+.template_qa/
+FindIt_ML_Project_Report.docx
+FindIt_ML_Project_Report.pdf
+FindIt_ML_Research_Paper.docx
+FindIt_ML_Research_Paper.pdf

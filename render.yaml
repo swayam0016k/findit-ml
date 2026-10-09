@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: findit-ml-demo
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /
+    envVars:
+      - key: FINDIT_SECRET_KEY
+        generateValue: true
+      - key: FINDIT_PUBLIC_DEMO
+        value: "true"
+      - key: FINDIT_DATABASE
+        value: /tmp/findit.db

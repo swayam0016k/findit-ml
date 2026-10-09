@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}FindIt ML — Lost & Found{% endblock %}
+{% block content %}
+{% if public_demo %}<div class="alert success">Public student demo: please use fictional examples only. Contact details are not collected, and demo reports may reset.</div>{% endif %}
+<section class="hero"><div><div class="eyebrow">CAMPUS LOST & FOUND</div><h1>Lost something?<br><span>Let’s find its way home.</span></h1><p>Report a lost or found item. FindIt ML compares descriptions and ranks possible matches.</p></div><div class="hero-mark">⌕</div></section>
+<section class="grid">
+  <div class="card form-card"><div class="section-heading"><div><div class="eyebrow">GET STARTED</div><h2>Post a report</h2></div><span class="step">01</span></div>
+    <form action="{{ url_for('report') }}" method="post">
+      <label>What happened?</label><div class="radio-row"><label class="radio"><input type="radio" name="status" value="lost" required><span> I lost it</span></label><label class="radio"><input type="radio" name="status" value="found"><span> I found it</span></label></div>
+      <div class="field-row"><div><label for="item_name">Item name</label><input id="item_name" name="item_name" placeholder="e.g. blue water bottle" required maxlength="80"></div><div><label for="category">Category</label><select id="category" name="category" required><option value="">Choose one</option>{% for c in ['Electronics','Books & stationery','Clothing','Accessories','Keys & cards','Other'] %}<option>{{ c }}</option>{% endfor %}</select></div></div>
+      <label for="description">Description</label><textarea id="description" name="description" rows="3" placeholder="Color, brand, stickers, distinctive details…" required maxlength="500"></textarea>
+      <div class="field-row"><div><label for="location">Where?</label><input id="location" name="location" placeholder="e.g. Library, second floor" required maxlength="100"></div><div><label for="event_date">When?</label><input id="event_date" name="event_date" type="date" required></div></div>
+      {% if not public_demo %}<label for="contact">Contact</label><input id="contact" name="contact" placeholder="Email or phone" required maxlength="120">{% endif %}
+      <button class="button primary" type="submit">Find possible matches <span>→</span></button>
+    </form>
+  </div>
+  <aside class="how-card"><div class="eyebrow">HOW IT WORKS</div><h2>More than a keyword search.</h2><p>FindIt ML uses TF-IDF and cosine similarity to compare the words in item reports, then boosts matches with the same category or location.</p><div class="how-step"><span>1</span><div><b>Describe</b><small>Share useful details</small></div></div><div class="how-step"><span>2</span><div><b>Compare</b><small>ML ranks similar reports</small></div></div><div class="how-step"><span>3</span><div><b>Reconnect</b><small>Contact the reporter</small></div></div><div class="note">A match score is a clue, not proof of ownership. Check item details before arranging a return.</div></aside>
+</section>
+<section class="reports"><div class="section-heading"><div><div class="eyebrow">CAMPUS BOARD</div><h2>Recent reports</h2></div><span class="count">{{ items|length }} reports</span></div>
+  {% if items %}<div class="report-list">{% for item in items %}<article class="report"><span class="badge {{ item.status }}">{{ item.status }}</span><div class="report-main"><b>{{ item.item_name }}</b><p>{{ item.category }} · {{ item.location }} · {{ item.event_date }}</p><small>{{ item.description }}</small></div>{% if not public_demo %}<form action="{{ url_for('delete_item', item_id=item.id) }}" method="post" onsubmit="return confirm('Remove this report?')"><button class="delete" title="Remove report">×</button></form>{% endif %}</article>{% endfor %}</div>{% else %}<div class="empty"><span>✳</span><b>No reports yet</b><p>Be the first to post a lost or found item.</p></div>{% endif %}
+</section>
+{% endblock %}

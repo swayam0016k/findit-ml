@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Possible matches — FindIt ML{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('home') }}">← Back to reports</a>
+<section class="result-head"><div class="eyebrow">REPORT SAVED</div><h1>Here are the closest matches.</h1><p>We compared your <b>{{ item.status }}</b> report for <b>{{ item.item_name }}</b> against reports with the opposite status.</p></section>
+<section class="match-list">
+{% if matches %}{% for match in matches %}<article class="match-card"><div class="match-top"><span class="badge {{ match.item.status }}">{{ match.item.status }}</span><span class="score">{{ (match.score * 100)|round|int }}% <small>similarity</small></span></div><h2>{{ match.item.item_name }}</h2><p>{{ match.item.category }} · {{ match.item.location }} · {{ match.item.event_date }}</p><p class="description">{{ match.item.description }}</p><div class="match-why">Match signals: {{ match.reasons|join(', ') }}</div>{% if public_demo %}<p class="description">Public demo mode does not collect contact details. Similarity is a clue, not proof of ownership.</p>{% elif '@' in match.item.contact %}<a class="button secondary" href="mailto:{{ match.item.contact }}">Contact reporter <span>↗</span></a>{% else %}<a class="button secondary" href="tel:{{ match.item.contact }}">Contact reporter <span>↗</span></a>{% endif %}</article>{% endfor %}{% else %}<div class="empty"><span>⌕</span><b>No likely matches yet</b><p>Your report is saved. Check the campus board again as new reports are added.</p></div>{% endif %}
+</section>
+<a class="button primary lower" href="{{ url_for('home') }}">View all reports <span>→</span></a>
+{% endblock %}
